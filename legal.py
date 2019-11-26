@@ -1,30 +1,32 @@
-#https://www.guru99.com/manipulating-xml-with-python.html
-import xml.dom.minidom
+import nltk
+from nltk import word_tokenize
+from nltk.corpus import stopwords
+from nltk import word_tokenize
+from nltk.stem.wordnet import WordNetLemmatizer 
+from nltk.stem.porter import PorterStemmer 
+
+import gensim 
+from gensim.models import Word2Vec 
+
+import xml.etree.ElementTree as ET
 
 def main():
-# use the parse() function to load and parse an XML file
-   doc = xml.dom.minidom.parse("Myxml.xml");
-  
-# print out the document node and the name of the first child tag
-   print doc.nodeName
-   print doc.firstChild.tagName
-  
-# get a list of XML tags from the document and print each one
-   expertise = doc.getElementsByTagName("expertise")
-   print "%d expertise:" % expertise.length
-   for skill in expertise:
-     print skill.getAttribute("name")
-    
-# create a new XML tag and add it into the document
-   newexpertise = doc.createElement("expertise")
-   newexpertise.setAttribute("name", "BigData")
-   doc.firstChild.appendChild(newexpertise)
-   print " "
+   file = open('06_3.xml').read()
+   root = ET.fromstring(file)
+   citations =  root.find('citations')
 
-   expertise = doc.getElementsByTagName("expertise")
-   print "%d expertise:" % expertise.length
-   for skill in expertise:
-     print skill.getAttribute("name")
-    
-if name == "__main__":
-  main();
+   final_body = ''
+
+   for child in citations:
+      text = child.find('text').text
+      final_body = final_body + '\n' + text
+
+   tokens = word_tokenize(final_body)
+   stop_words = set(stopwords.words('english'))
+   filtered_words = [w for w in tokens if w not in stop_words]
+   
+   ''' CBOW Model '''
+   model1 = gensim.models.Word2Vec(data, min_count = 1, size = 100, window = 5) 
+
+if __name__ == "__main__":
+  main()
