@@ -25,8 +25,14 @@ def main():
    stop_words = set(stopwords.words('english'))
    filtered_words = [w for w in tokens if w not in stop_words]
    
+   # print(filtered_words)
+
    ''' CBOW Model '''
-   model1 = gensim.models.Word2Vec(data, min_count = 1, size = 100, window = 5) 
+   model = gensim.models.Word2Vec([filtered_words], min_count = 1, size = 100, window = 5) 
+   model.train([filtered_words],total_examples=1,epochs=1)
+   word_vector = model.wv
+   word_vector.save('vector.kv')
+   print('Word vector for justice is : \n'+str(model['justice']))
 
 if __name__ == "__main__":
   main()
